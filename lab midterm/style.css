@@ -1,0 +1,502 @@
+/* =============================================
+   NIKE.COM CLONE — Midterm Lab
+   SP26 Web Technologies — SP24-BCS-B
+   Assignment 2 + Midterm Carousel
+   ============================================= */
+
+/* ===== RESET ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #fff;
+  color: #111;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* ===== PILL BUTTONS ===== */
+.btn-pill-white {
+  display: inline-block;
+  background: #fff;
+  color: #111;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.btn-pill-white:hover { background: #e8e8e8; }
+
+.btn-pill-outline {
+  display: inline-block;
+  background: transparent;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1.5px solid rgba(255,255,255,0.75);
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.btn-pill-outline:hover { background: rgba(255,255,255,0.12); }
+
+/* ===== UTILITY BAR ===== */
+.util-bar {
+  background: #f5f5f5;
+  padding: 6px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.util-left { display: flex; align-items: center; gap: 14px; }
+.util-right { display: flex; align-items: center; gap: 12px; }
+.util-right a { font-size: 0.75rem; color: #111; transition: color 0.2s; }
+.util-right a:hover { color: #555; }
+.util-sep { color: #ccc; font-size: 0.75rem; }
+
+/* ===== NAVBAR ===== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+}
+.nav-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.nike-logo { display: flex; align-items: center; flex-shrink: 0; }
+
+.nav-links { display: flex; gap: 28px; flex: 1; justify-content: center; }
+.nav-links a {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #111;
+  padding: 6px 0;
+  position: relative;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 2px;
+  background: #111;
+  transition: width 0.2s;
+}
+.nav-links a:hover::after { width: 100%; }
+
+.nav-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f5f5f5;
+  border-radius: 30px;
+  padding: 8px 16px;
+  min-width: 160px;
+}
+.search-bar input {
+  border: none; background: none; outline: none;
+  font-size: 0.82rem; color: #111; font-family: inherit; width: 100%;
+}
+.search-bar input::placeholder { color: #888; }
+
+.icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; border-radius: 50%; color: #111;
+  transition: background 0.2s; flex-shrink: 0;
+}
+.icon-btn:hover { background: #f5f5f5; }
+
+/* ===== HAMBURGER — hidden on desktop ===== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.hamburger:hover { background: #f5f5f5; }
+.hamburger span {
+  display: block;
+  width: 22px; height: 2px;
+  background: #111; border-radius: 2px;
+  transition: all 0.3s ease;
+}
+/* Animated X when open */
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ===== MOBILE MENU ===== */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: #fff;
+  border-top: 1px solid #e5e5e5;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+.mobile-menu.open { display: flex; max-height: 600px; }
+.mobile-menu a {
+  font-size: 1rem; font-weight: 500; color: #111;
+  padding: 14px 24px;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background 0.2s;
+  min-height: 48px; /* touch-friendly */
+  display: flex; align-items: center;
+}
+.mobile-menu a:hover { background: #f5f5f5; }
+.mob-divider { height: 6px; background: #f5f5f5; }
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 85vh;
+  min-height: 500px;
+  overflow: hidden;
+}
+.hero-bg { position: absolute; inset: 0; }
+.hero-img-sim {
+  width: 100%; height: 100%;
+  background: linear-gradient(160deg, #0a1628 0%, #1a2850 25%, #0d1f3c 50%, #0a0f1a 80%, #050810 100%);
+  position: relative; overflow: hidden;
+}
+.hero-crowd {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 60% 40%, rgba(30,60,120,0.5) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 30% 60%, rgba(20,40,90,0.4) 0%, transparent 60%);
+}
+.hero-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 55%, transparent 100%);
+}
+.hero-content {
+  position: absolute; bottom: 48px; left: 48px;
+  z-index: 2; color: #fff; max-width: 720px;
+}
+.hero-title {
+  font-size: clamp(2.6rem, 6vw, 5.5rem);
+  font-weight: 900; line-height: 1; letter-spacing: -0.01em;
+  text-transform: uppercase; margin-bottom: 12px;
+}
+.hero-sub { font-size: 1rem; color: rgba(255,255,255,0.85); margin-bottom: 28px; }
+.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* ===== FEATURED GRIDS — edge to edge 2 columns ===== */
+.featured-grid { display: grid; grid-template-columns: 1fr 1fr; }
+
+.feat-card { position: relative; overflow: hidden; }
+.feat-img {
+  height: 560px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+
+/* Card backgrounds */
+.feat-dark .feat-img    { background: #111; }
+.feat-light-grey .feat-img { background: linear-gradient(160deg, #d8d8d8, #b0b0b0); }
+.feat-cyan .feat-img    { background: linear-gradient(160deg, #00b8d9, #0090b8); }
+.feat-dark-run .feat-img { background: linear-gradient(160deg, #2a2a2a, #111); }
+
+.feat-gradient { position: absolute; inset: 0; }
+.feat-grad-red  { background: radial-gradient(ellipse 80% 80% at 40% 60%, rgba(180,20,20,0.75) 0%, transparent 70%); }
+.feat-grad-grey { background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(255,255,255,0.3) 0%, transparent 60%); }
+.feat-grad-dark { background: radial-gradient(ellipse 60% 60% at 50% 60%, rgba(255,140,0,0.2) 0%, transparent 60%); }
+
+.feat-lego-bg {
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 32px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 32px);
+}
+
+.feat-shoe-wrap {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+}
+.feat-shoe-emoji  { font-size: 9rem; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)); }
+.feat-shoe-emoji2 { font-size: 7rem; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)); margin-left: -24px; }
+.feat-shoe-big    { font-size: 10rem; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4)); }
+.feat-shoe-lego   { font-size: 9rem; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3)); }
+.feat-shoe-run    { font-size: 8rem; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)); }
+
+.feat-body {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 28px 28px 32px; color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+}
+.feat-label { font-size: 0.78rem; color: rgba(255,255,255,0.75); margin-bottom: 6px; }
+.feat-title { font-size: 1.3rem; font-weight: 700; line-height: 1.25; margin-bottom: 20px; max-width: 360px; }
+.feat-btns  { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ===== FULLBLEED BANNER ===== */
+.fullbleed-banner {
+  position: relative; width: 100%;
+  height: 65vh; min-height: 400px; overflow: hidden;
+}
+.fullbleed-img {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, #1a1a1a 0%, #2d2d2d 40%, #111 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.fullbleed-person {
+  font-size: 18rem; opacity: 0.12;
+  position: absolute; right: 12%; bottom: 0;
+}
+.fullbleed-gradient {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.28) 60%, transparent 100%);
+}
+.fullbleed-content {
+  position: absolute; bottom: 52px; left: 48px;
+  color: #fff; z-index: 2;
+}
+.fullbleed-label { font-size: 0.82rem; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
+.fullbleed-title { font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 700; line-height: 1.15; margin-bottom: 28px; }
+.fullbleed-btns  { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* =============================================
+   MIDTERM — ICONIC MODELS CAROUSEL SECTION
+   ============================================= */
+.iconic-section {
+  padding: 52px 24px 80px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* Header: title left, arrow buttons right — exactly like real Nike */
+.iconic-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.iconic-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ③ Prev/Next circle buttons */
+.carousel-nav-btns { display: flex; gap: 8px; }
+.carousel-nav-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: #e5e5e5;
+  color: #111;
+  display: flex; align-items: center; justify-content: center;
+  border: none; cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.carousel-nav-btn:hover { background: #ccc; transform: scale(1.06); }
+
+/* ③ Slide counter */
+.slide-counter {
+  font-size: 0.8rem;
+  color: #757575;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+/* Each card — Slick wraps these */
+.iconic-carousel .iconic-card {
+  padding: 0 8px;
+  cursor: pointer;
+}
+
+.iconic-img {
+  border-radius: 8px;
+  height: 320px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  transition: transform 0.3s;
+}
+.iconic-card:hover .iconic-img { transform: scale(1.02); }
+
+/* Card background colours */
+.iconic-bg-grey   { background: #e0e4ea; }
+.iconic-bg-yellow { background: #1a1a1a; }
+.iconic-bg-light  { background: #d8d8d8; }
+.iconic-bg-dark   { background: #1f1f1f; }
+.iconic-bg-blue   { background: #c8d8f0; }
+.iconic-bg-red    { background: #8b1a1a; }
+.iconic-bg-green  { background: #1a3a1a; }
+.iconic-bg-beige  { background: #e8dfd4; }
+
+.iconic-shoe {
+  font-size: 6rem;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.25));
+  z-index: 1;
+}
+
+/* Favourite heart button */
+.fav-btn {
+  position: absolute; top: 10px; right: 10px;
+  background: rgba(255,255,255,0.88);
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #111; z-index: 2;
+  transition: background 0.2s, transform 0.2s;
+}
+.fav-btn:hover { background: #fff; transform: scale(1.1); }
+
+/* Name badge pill at bottom of card image */
+.iconic-badge-wrap { position: absolute; bottom: 14px; left: 14px; z-index: 2; }
+.iconic-badge {
+  background: #fff; color: #111;
+  font-size: 0.75rem; font-weight: 600;
+  padding: 6px 14px; border-radius: 30px;
+}
+
+/* Card text info below image */
+.iconic-info { padding: 12px 0 0; }
+.iconic-cat   { font-size: 0.75rem; color: #757575; margin-top: 2px; }
+.iconic-name  { font-size: 0.92rem; font-weight: 700; margin: 4px 0; color: #111; }
+.iconic-colors { font-size: 0.75rem; color: #757575; margin-bottom: 4px; }
+.iconic-price  { font-size: 0.88rem; font-weight: 600; color: #111; }
+
+/* Product tags */
+.p-tag {
+  display: inline-block;
+  font-size: 0.7rem; font-weight: 700;
+  padding: 2px 8px; border-radius: 4px; margin-bottom: 4px;
+}
+.tag-new    { background: #e5f6e5; color: #1a7a1a; }
+.tag-member { background: #f0e6ff; color: #6600cc; }
+.tag-sale   { background: #ffe5e5; color: #cc0000; }
+
+.price-row  { display: flex; align-items: center; gap: 8px; }
+.p-sale     { color: #cc0000; }
+.p-orig     { color: #757575; text-decoration: line-through; font-weight: 400; }
+
+/* Hide Slick's built-in arrows — we use custom buttons */
+.iconic-carousel .slick-prev,
+.iconic-carousel .slick-next { display: none !important; }
+
+/* Slick dot indicators */
+.iconic-carousel .slick-dots { bottom: -36px; }
+.iconic-carousel .slick-dots li button:before {
+  font-size: 7px; color: #111; opacity: 0.25;
+}
+.iconic-carousel .slick-dots li.slick-active button:before {
+  opacity: 1; color: #111;
+}
+
+/* ===== FOOTER ===== */
+.footer { background: #fff; border-top: 1px solid #e5e5e5; padding: 40px 0 0; }
+.footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.footer-cols {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 32px; padding-bottom: 40px; border-bottom: 1px solid #e5e5e5;
+}
+.footer-col { display: flex; flex-direction: column; gap: 10px; }
+.footer-col h4 { font-size: 0.85rem; font-weight: 700; color: #111; margin-bottom: 4px; }
+.footer-col a  { font-size: 0.8rem; color: #555; transition: color 0.2s; line-height: 1.6; }
+.footer-col a:hover { color: #111; }
+
+.footer-bottom-bar { padding: 28px 0 24px; }
+.footer-bottom-cols {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 16px; margin-bottom: 24px;
+}
+.footer-b-col h5 { font-size: 0.82rem; font-weight: 600; color: #111; }
+.footer-b-right  { text-align: right; }
+.footer-globe    { font-size: 0.8rem; color: #555; cursor: pointer; }
+
+.footer-legal {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+  padding-top: 16px; border-top: 1px solid #e5e5e5;
+}
+.footer-legal p { font-size: 0.72rem; color: #757575; }
+.footer-legal-links { display: flex; gap: 20px; flex-wrap: wrap; }
+.footer-legal-links a { font-size: 0.72rem; color: #757575; transition: color 0.2s; }
+.footer-legal-links a:hover { color: #111; }
+
+/* =============================================
+   RESPONSIVE — MEDIA QUERIES
+   ============================================= */
+
+/* ===== TABLET ≤ 1024px ===== */
+@media (max-width: 1024px) {
+  .nav-links { gap: 18px; }
+  .search-bar { min-width: 120px; }
+  .feat-img { height: 440px; }
+  .feat-title { font-size: 1.1rem; }
+  .footer-cols { grid-template-columns: repeat(2, 1fr); }
+  .footer-bottom-cols { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ===== MOBILE ≤ 768px ===== */
+@media (max-width: 768px) {
+  /* Utility bar hidden */
+  .util-bar { display: none; }
+
+  /* Desktop nav + search hidden */
+  .nav-links { display: none; }
+  .search-bar { display: none; }
+
+  /* Hamburger shown */
+  .hamburger { display: flex; }
+
+  .nav-inner { padding: 0 16px; gap: 10px; }
+
+  /* Hero */
+  .hero { height: 70vw; min-height: 300px; }
+  .hero-content { left: 20px; bottom: 24px; }
+  .hero-title { font-size: 2rem; }
+  .hero-sub { font-size: 0.85rem; margin-bottom: 16px; }
+
+  /* Featured grids stack */
+  .featured-grid { grid-template-columns: 1fr; }
+  .feat-img { height: 340px; }
+
+  /* Fullbleed */
+  .fullbleed-banner { height: 55vw; min-height: 260px; }
+  .fullbleed-content { left: 20px; bottom: 24px; }
+  .fullbleed-title { font-size: 1.4rem; }
+
+  /* Carousel section */
+  .iconic-section { padding: 36px 16px 60px; }
+
+  /* Footer */
+  .footer-cols { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .footer-bottom-cols { grid-template-columns: 1fr 1fr; }
+  .footer-legal { flex-direction: column; align-items: flex-start; }
+}
+
+/* ===== SMALL MOBILE ≤ 480px ===== */
+@media (max-width: 480px) {
+  .hero-title { font-size: 1.6rem; }
+  .hero-btns  { flex-direction: column; align-items: flex-start; }
+  .fullbleed-btns { flex-direction: column; align-items: flex-start; }
+  .feat-img { height: 280px; }
+  .iconic-img { height: 250px; }
+  .footer-cols { grid-template-columns: 1fr; }
+  .footer-bottom-cols { grid-template-columns: 1fr; }
+}

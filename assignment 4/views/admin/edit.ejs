@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Product | Admin</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo">
+      <h2>KHAADI</h2>
+      <p>Admin Panel</p>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/admin">📊 Dashboard</a>
+      <a href="/admin/add">➕ Add Product</a>
+      <a href="/products">🛍️ View Store</a>
+      <a href="/">🏠 Home</a>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+
+    <header class="admin-header">
+      <div>
+        <h1>Edit Product</h1>
+        <p>Update product details</p>
+      </div>
+      <a href="/admin" class="btn-secondary">← Back to Dashboard</a>
+    </header>
+
+    <section class="form-section">
+      <form action="/admin/edit/<%= product._id %>" method="POST" enctype="multipart/form-data" class="product-form">
+
+        <div class="form-group">
+          <label for="name">Product Name <span class="required">*</span></label>
+          <input type="text" id="name" name="name" value="<%= product.name %>" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="price">Price (Rs.) <span class="required">*</span></label>
+            <input type="number" id="price" name="price" min="0" value="<%= product.price %>" required />
+          </div>
+
+          <div class="form-group">
+            <label for="stock">Stock <span class="required">*</span></label>
+            <input type="number" id="stock" name="stock" min="0" value="<%= product.stock %>" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="category">Category <span class="required">*</span></label>
+            <select id="category" name="category" required>
+              <option value="Kurtas" <%= product.category === 'Kurtas' ? 'selected' : '' %>>Kurtas</option>
+              <option value="Sarees" <%= product.category === 'Sarees' ? 'selected' : '' %>>Sarees</option>
+              <option value="Accessories" <%= product.category === 'Accessories' ? 'selected' : '' %>>Accessories</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="rating">Rating (0-5)</label>
+            <input type="number" id="rating" name="rating" min="0" max="5" step="0.1" value="<%= product.rating %>" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Current Image</label>
+          <div class="current-image">
+            <img src="<%= product.image %>" alt="<%= product.name %>" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="image">Change Image (optional)</label>
+          <input type="file" id="image" name="image" accept="image/*" />
+          <small>Leave empty to keep current image</small>
+        </div>
+
+        <div class="form-actions">
+          <a href="/admin" class="btn-secondary">Cancel</a>
+          <button type="submit" class="btn-primary">💾 Save Changes</button>
+        </div>
+
+      </form>
+    </section>
+
+  </main>
+
+</body>
+</html>

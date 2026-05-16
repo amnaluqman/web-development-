@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products | Khaadi</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/products.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <header class="navbar">
+    <a href="/" class="logo">
+      <img src="/logo.svg" alt="Khaadi Logo" />
+    </a>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/products" class="active">Products</a>
+    </nav>
+  </header>
+
+  <!-- ===== PAGE HEADING ===== -->
+  <section class="products-header">
+    <h1>Our Collection</h1>
+    <p>Showing <%= products.length %> of <%= totalProducts %> products</p>
+  </section>
+
+  <!-- ===== FILTERS BAR ===== -->
+  <section class="filters-bar">
+    <form action="/products" method="GET" class="filters-form">
+      
+      <!-- Search by Name -->
+      <div class="filter-group">
+        <input 
+          type="text" 
+          name="search" 
+          placeholder="Search products..." 
+          value="<%= search %>" 
+          class="search-input"
+        />
+      </div>
+
+      <!-- Filter by Category -->
+      <div class="filter-group">
+        <select name="category" class="filter-select">
+          <option value="">All Categories</option>
+          <option value="Kurtas" <%= category === 'Kurtas' ? 'selected' : '' %>>Kurtas</option>
+          <option value="Sarees" <%= category === 'Sarees' ? 'selected' : '' %>>Sarees</option>
+          <option value="Accessories" <%= category === 'Accessories' ? 'selected' : '' %>>Accessories</option>
+        </select>
+      </div>
+
+      <!-- Price Range -->
+      <div class="filter-group price-group">
+        <input 
+          type="number" 
+          name="minPrice" 
+          placeholder="Min Price" 
+          value="<%= minPrice %>"
+          class="price-input"
+        />
+        <span>-</span>
+        <input 
+          type="number" 
+          name="maxPrice" 
+          placeholder="Max Price" 
+          value="<%= maxPrice %>"
+          class="price-input"
+        />
+      </div>
+
+      <!-- Apply Filter Button -->
+      <button type="submit" class="apply-btn">Apply Filters</button>
+      
+      <!-- Reset Button -->
+      <a href="/products" class="reset-btn">Reset</a>
+    </form>
+  </section>
+
+  <!-- ===== PRODUCTS GRID ===== -->
+  <section class="products-section">
+    <% if (products.length === 0) { %>
+      <p class="no-products">No products found. Try changing your filters!</p>
+    <% } else { %>
+      <div class="products-grid">
+        <% products.forEach(product => { %>
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <img src="<%= product.image %>" alt="<%= product.name %>" />
+            </div>
+            <div class="product-info">
+              <h3><%= product.name %></h3>
+              <p class="category"><%= product.category %></p>
+              <div class="rating">⭐ <%= product.rating %></div>
+              <div class="price">Rs. <%= product.price.toLocaleString() %></div>
+              <p class="stock">
+                <% if (product.stock > 0) { %>
+                  In Stock (<%= product.stock %>)
+                <% } else { %>
+                  Out of Stock
+                <% } %>
+              </p>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </section>
+
+  <!-- ===== PAGINATION ===== -->
+  <% if (totalPages > 1) { %>
+    <section class="pagination">
+      
+      <!-- Previous Button -->
+      <% if (currentPage > 1) { %>
+        <a href="/products?page=<%= currentPage - 1 %>&search=<%= search %>&category=<%= category %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>" class="page-btn">← Previous</a>
+      <% } else { %>
+        <span class="page-btn disabled">← Previous</span>
+      <% } %>
+
+      <!-- Page Numbers -->
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <a 
+          href="/products?page=<%= i %>&search=<%= search %>&category=<%= category %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>" 
+          class="page-btn <%= currentPage === i ? 'active' : '' %>"
+        >
+          <%= i %>
+        </a>
+      <% } %>
+
+      <!-- Next Button -->
+      <% if (currentPage < totalPages) { %>
+        <a href="/products?page=<%= currentPage + 1 %>&search=<%= search %>&category=<%= category %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>" class="page-btn">Next →</a>
+      <% } else { %>
+        <span class="page-btn disabled">Next →</span>
+      <% } %>
+
+    </section>
+  <% } %>
+
+</body>
+</html>

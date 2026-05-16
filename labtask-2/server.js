@@ -1,31 +1,19 @@
-// Import the express module
-let express = require("express");
+const express = require('express');
+const app = express();
+const port = 3000;
 
-// Initialize an express application
-let app = express();
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
 
-// Set EJS as the templating engine
-app.set("view engine", "ejs");
+// Serve static files from public folder
+app.use(express.static('public'));
 
-// Serve static files from the 'public' directory
-app.use(express.static("public"));
-
-// Define a route for the root URL ('/')
-app.get("/", function (req, res) {
-  // Render the 'homepage.ejs' view
-  return res.render("homepage");
+// Home route
+app.get('/', function(req, res) {
+  res.render('index');
 });
 
-// Define a route for the '/contact-us' page
-app.get("/contact-us", function (req, res) {
-  // Render the 'contact-us.ejs' view
-  return res.render("contact-us");
+// Start server
+app.listen(port, function() {
+  console.log('Server is running at http://localhost:3000');
 });
-
-// Start the server on port 3000
-app.listen(3000, function () {
-  console.log("Server Started at localhost:3000");
-});
-
-// Log a message to indicate that the server.js file is being executed
-console.log("Console from server.js file");

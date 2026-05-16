@@ -1,36 +1,15 @@
-// =============================================
-//  NIKE CLONE — Lab Task 2
-//  Vanilla JavaScript — Hamburger Menu
-// =============================================
+// Hamburger menu toggle
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('nav-links');
 
-var hamburger = document.getElementById('hamburger');
-var mobileMenu = document.getElementById('mobileMenu');
-
-function toggleMenu() {
-  var isOpen = mobileMenu.classList.contains('open');
-  if (isOpen) {
-    mobileMenu.classList.remove('open');
-    hamburger.classList.remove('open');
-  } else {
-    mobileMenu.classList.add('open');
-    hamburger.classList.add('open');
-  }
-}
-
-function closeMenu() {
-  mobileMenu.classList.remove('open');
-  hamburger.classList.remove('open');
-}
-
-document.addEventListener('click', function(event) {
-  var navbar = document.querySelector('.navbar');
-  if (!navbar.contains(event.target)) {
-    closeMenu();
-  }
+hamburger.addEventListener('click', function() {
+  navLinks.classList.toggle('open');
 });
 
-window.addEventListener('resize', function() {
-  if (window.innerWidth > 768) {
-    closeMenu();
-  }
+// Close menu when a nav link is clicked (BONUS)
+const links = document.querySelectorAll('.nav-links a');
+links.forEach(function(link) {
+  link.addEventListener('click', function() {
+    navLinks.classList.remove('open');
+  });
 });

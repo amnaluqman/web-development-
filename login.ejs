@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Khaadi</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/auth.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <header class="navbar">
+    <a href="/" class="logo">
+      <img src="/logo.svg" alt="Khaadi Logo" />
+    </a>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/products">Products</a>
+      <a href="/register">Register</a>
+    </nav>
+  </header>
+
+  <!-- ===== FLASH MESSAGES ===== -->
+  <% if (success_msg && success_msg.length > 0) { %>
+    <div class="flash flash-success"><%= success_msg %></div>
+  <% } %>
+  <% if (error_msg && error_msg.length > 0) { %>
+    <div class="flash flash-error"><%= error_msg %></div>
+  <% } %>
+
+  <!-- ===== LOGIN FORM ===== -->
+  <section class="auth-section">
+    <div class="auth-card">
+      <h1>Welcome Back</h1>
+      <p class="auth-subtitle">Sign in to continue shopping.</p>
+
+      <form action="/login" method="POST" class="auth-form">
+        
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="example@email.com"
+            required 
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="Enter your password"
+            required 
+          />
+        </div>
+
+        <button type="submit" class="auth-btn">Sign In</button>
+      </form>
+
+      <p class="auth-footer">
+        Don't have an account? <a href="/register">Create one</a>
+      </p>
+    </div>
+  </section>
+
+</body>
+</html>

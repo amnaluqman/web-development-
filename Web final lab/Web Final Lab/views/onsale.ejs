@@ -1,0 +1,208 @@
+<!-- ===== ON-SALE PRODUCTS PAGE (FINAL LAB EXAM) ===== -->
+
+<style>
+  .sale-banner {
+    background: linear-gradient(135deg, #d63384, #6b3410);
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  .sale-banner h2 { font-size: 32px; margin-bottom: 8px; }
+  .sale-banner p { font-size: 16px; opacity: 0.9; }
+
+  #product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+  }
+
+  .product-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+
+  .sale-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #d63384;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 2;
+  }
+
+  .product-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .product-info { padding: 15px; }
+  .product-info h3 { font-size: 16px; margin-bottom: 8px; color: #333; }
+  .product-info .category { color: #888; font-size: 13px; margin-bottom: 8px; }
+  .product-info .price { color: #d63384; font-size: 20px; font-weight: bold; }
+  .product-info .rating { color: #f5a623; font-size: 14px; margin-top: 5px; }
+
+  /* ===== PAGINATION CONTROLS ===== */
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 25px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  .pagination-controls button {
+    background: #6b3410;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  .pagination-controls button:hover:not(:disabled) {
+    background: #d63384;
+  }
+  .pagination-controls button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  #page-indicator {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    min-width: 120px;
+    text-align: center;
+  }
+
+  .empty-msg {
+    text-align: center;
+    padding: 50px;
+    color: #888;
+    font-size: 18px;
+  }
+</style>
+
+<!-- ===== SALE BANNER ===== -->
+<div class="sale-banner">
+  <h2>🔥 On-Sale Products</h2>
+  <p>Grab the best Khaadi deals before they're gone! <%= products.length %> items currently on sale.</p>
+</div>
+
+<!-- ===== PRODUCT GRID (server renders ALL products, jQuery handles visibility) ===== -->
+<div id="product-list">
+  <% if (products && products.length > 0) { %>
+    <% products.forEach(product => { %>
+      <div class="product-card">
+        <span class="sale-tag">SALE</span>
+        <img src="<%= product.image %>" alt="<%= product.name %>">
+        <div class="product-info">
+          <h3><%= product.name %></h3>
+          <p class="category"><%= product.category %></p>
+          <p class="price">Rs. <%= product.price.toLocaleString() %></p>
+          <p class="rating">⭐ <%= product.rating %> / 5</p>
+        </div>
+      </div>
+    <% }); %>
+  <% } else { %>
+    <p class="empty-msg">No on-sale products available right now. Check back soon!</p>
+  <% } %>
+</div>
+
+<!-- ===== PAGINATION CONTROLS ===== -->
+<% if (products && products.length > 0) { %>
+  <div class="pagination-controls">
+    <button id="prev-btn">⬅️ Previous</button>
+    <span id="page-indicator">Page 1 of 1</span>
+    <button id="next-btn">Next ➡️</button>
+  </div>
+<% } %>
+
+<!-- ===== jQuery PAGINATION SCRIPT (PURE CLIENT-SIDE) ===== -->
+<script>
+  $(document).ready(function() {
+    // ===== SETUP =====
+    const productsPerPage = 10;
+    let currentPage = 1;
+    
+    // Grab all product cards rendered by the server
+    const $allProducts = $('#product-list .product-card');
+    const totalProducts = $allProducts.length;
+    const totalPages = Math.ceil(totalProducts / productsPerPage);
+
+    console.log(`📊 Total on-sale products: ${totalProducts}`);
+    console.log(`📄 Total pages: ${totalPages}`);
+
+    // ===== FUNCTION: Show only the products of the current page =====
+    function showPage(page) {
+      // Step 1: Hide ALL products
+      $allProducts.hide();
+
+      // Step 2: Calculate the slice range for this page
+      const startIndex = (page - 1) * productsPerPage;
+      const endIndex = startIndex + productsPerPage;
+
+      // Step 3: Show only products in that range using .slice()
+      $allProducts.slice(startIndex, endIndex).show();
+
+      // Step 4: Update the page indicator text
+      $('#page-indicator').text(`Page ${page} of ${totalPages}`);
+
+      // Step 5: Enable/disable buttons based on page boundary
+      if (page === 1) {
+        $('#prev-btn').prop('disabled', true);
+      } else {
+        $('#prev-btn').prop('disabled', false);
+      }
+
+      if (page === totalPages) {
+        $('#next-btn').prop('disabled', true);
+      } else {
+        $('#next-btn').prop('disabled', false);
+      }
+    }
+
+    // ===== INITIAL STATE: Show first page =====
+    showPage(currentPage);
+
+    // ===== NEXT BUTTON CLICK =====
+    $('#next-btn').on('click', function() {
+      if (currentPage < totalPages) {
+        currentPage++;
+        showPage(currentPage);
+      }
+    });
+
+    // ===== PREVIOUS BUTTON CLICK =====
+    $('#prev-btn').on('click', function() {
+      if (currentPage > 1) {
+        currentPage--;
+        showPage(currentPage);
+      }
+    });
+  });
+</script>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | Khaadi</title>
+  
+  <!-- jQuery CDN (needed for onsale page pagination) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+    body { background: #fdf6f0; color: #333; }
+    
+    /* ===== HEADER ===== */
+    header {
+      background: #6b3410;
+      color: white;
+      padding: 15px 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      background: white;
+      padding: 8px 15px;
+      border-radius: 8px;
+    }
+    .logo-container img {
+      height: 40px;
+      width: auto;
+      display: block;
+    }
+    nav {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    nav a:hover { opacity: 0.7; }
+    .header-spacer {
+      width: 140px; /* Balances the logo width for true centering */
+    }
+    
+    /* ===== MAIN CONTENT ===== */
+    main { padding: 40px; max-width: 1200px; margin: 0 auto; }
+    
+    /* ===== FOOTER ===== */
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <!-- Logo on the left (white background card so logo is visible) -->
+    <div class="logo-container">
+      <img src="/khaadi%20logo.svg" alt="Khaadi Logo">
+    </div>
+
+    <!-- Centered nav links -->
+    <nav>
+      <a href="/">Home</a>
+      <a href="/products">All Products</a>
+      <a href="/onsale-products">On Sale 🔥</a>
+    </nav>
+
+    <!-- Empty spacer to keep nav truly centered -->
+    <div class="header-spacer"></div>
+  </header>
+
+  <!-- ===== PAGE CONTENT GOES HERE ===== -->
+  <main>
+    <%- body %>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <p>© 2025 Khaadi Store — Final Lab Exam</p>
+  </footer>
+
+</body>
+</html>

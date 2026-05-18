@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Khaadi</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo">
+      <h2>KHAADI</h2>
+      <p>Admin Panel</p>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/admin" class="active">📊 Dashboard</a>
+      <a href="/admin/add">➕ Add Product</a>
+      <a href="/products">🛍️ View Store</a>
+      <a href="/">🏠 Home</a>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+
+    <header class="admin-header">
+      <div>
+        <h1>Product Dashboard</h1>
+        <p>Manage all products in your store</p>
+      </div>
+      <a href="/admin/add" class="btn-primary">+ Add New Product</a>
+    </header>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <p class="stat-label">Total Products</p>
+        <h2><%= products.length %></h2>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Kurtas</p>
+        <h2><%= products.filter(p => p.category === 'Kurtas').length %></h2>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Sarees</p>
+        <h2><%= products.filter(p => p.category === 'Sarees').length %></h2>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Accessories</p>
+        <h2><%= products.filter(p => p.category === 'Accessories').length %></h2>
+      </div>
+    </section>
+
+    <section class="table-section">
+      <h2>All Products</h2>
+      <div class="table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Rating</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% products.forEach(product => { %>
+              <tr>
+                <td><img src="<%= product.image %>" alt="<%= product.name %>" class="table-img" /></td>
+                <td><%= product.name %></td>
+                <td><span class="category-badge"><%= product.category %></span></td>
+                <td>Rs. <%= product.price.toLocaleString() %></td>
+                <td>
+                  <% if (product.stock > 10) { %>
+                    <span class="stock in-stock"><%= product.stock %></span>
+                  <% } else if (product.stock > 0) { %>
+                    <span class="stock low-stock"><%= product.stock %></span>
+                  <% } else { %>
+                    <span class="stock out-stock">Out of Stock</span>
+                  <% } %>
+                </td>
+                <td>⭐ <%= product.rating %></td>
+                <td>
+                  <div class="action-btns">
+                    <a href="/admin/edit/<%= product._id %>" class="btn-edit">Edit</a>
+                    <form action="/admin/delete/<%= product._id %>" method="POST" style="display:inline;" onsubmit="return confirmDelete('<%= product.name %>')">
+                      <button type="submit" class="btn-delete">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    function confirmDelete(productName) {
+      return confirm(`Are you sure you want to delete "${productName}"?\n\nThis action cannot be undone!`);
+    }
+  </script>
+
+</body>
+</html>
